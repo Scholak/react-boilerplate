@@ -10,6 +10,8 @@ import {
 import { useNavigate } from '@tanstack/react-router'
 import { useUsers } from '@/modules/users/users.hooks'
 import type { TUser } from '@/modules/users/users.types'
+import { getInitials } from '@/core/utils/get-initials'
+import { formatDate } from '@/core/utils/format-date'
 
 const { Title, Text } = Typography
 
@@ -44,8 +46,7 @@ export function UsersTable({ onDeleteUser, isDeleting }: TUsersTableProps) {
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center shrink-0">
             <span className="text-indigo-600 font-semibold text-xs">
-              {record.firstName.charAt(0).toUpperCase()}
-              {record.lastName.charAt(0).toUpperCase()}
+              {getInitials(record.firstName, record.lastName)}
             </span>
           </div>
           <div>
@@ -74,12 +75,7 @@ export function UsersTable({ onDeleteUser, isDeleting }: TUsersTableProps) {
       key: 'createdAt',
       responsive: ['md'],
       sorter: (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
-      render: (val: string) =>
-        new Date(val).toLocaleDateString('tr-TR', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-        }),
+      render: (val: string) => formatDate(val),
     },
     {
       title: 'İşlemler',

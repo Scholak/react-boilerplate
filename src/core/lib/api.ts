@@ -16,9 +16,21 @@ api.interceptors.request.use((req) => {
 
 api.interceptors.response.use(
   (res) => res,
-  (error) => {
-    if (error.response?.status === 401) {
-      queryClient.removeQueries({ queryKey: ACCESS_TOKEN_KEY })
+  async (error) => {
+    const originalRequest = error.config
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true
+      try {
+        const { data } = await axios.get(`${config.apiUrl}/auth/get-token`, {
+          withCredentials: true,
+        })
+        const accessToken = data.data.accessToken
+        queryClient.setQueryData(ACCESS_TOKEN_KEY, accessToken)
+        originalRequest.headers.Authorization = `Bearer ${accessToken}`
+        return api(originalRequest)
+      } catch {
+        queryClient.removeQueries({ queryKey: ACCESS_TOKEN_KEY })
+      }
     }
     return Promise.reject(error)
   },

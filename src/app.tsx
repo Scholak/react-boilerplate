@@ -14,8 +14,7 @@ export default function AppRoot() {
         token: {
           colorPrimary: '#4f46e5',
           borderRadius: 8,
-          fontFamily:
-            '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+          fontFamily: '"Poppins", sans-serif',
         },
       }}
     >

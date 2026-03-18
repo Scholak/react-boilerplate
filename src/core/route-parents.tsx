@@ -2,8 +2,7 @@ import { createRootRoute, createRoute, redirect, Outlet } from '@tanstack/react-
 import { AuthLayout } from '@/core/layouts/auth-layout'
 import { DashboardLayout } from '@/core/layouts/dashboard-layout'
 import { authQueryOptions } from '@/modules/auth/auth.hooks'
-import { queryClient, ACCESS_TOKEN_KEY } from '@/core/lib/query-client'
-import { getToken } from '@/modules/auth/auth.service'
+import { queryClient } from '@/core/lib/query-client'
 
 export const rootRoute = createRootRoute({
   component: () => <Outlet />,
@@ -23,13 +22,7 @@ export const dashboardLayoutRoute = createRoute({
     try {
       await queryClient.ensureQueryData(authQueryOptions)
     } catch {
-      try {
-        const { accessToken } = await getToken()
-        queryClient.setQueryData(ACCESS_TOKEN_KEY, accessToken)
-        await queryClient.ensureQueryData(authQueryOptions)
-      } catch {
-        throw redirect({ to: '/sign-in' })
-      }
+      throw redirect({ to: '/sign-in' })
     }
   },
 })

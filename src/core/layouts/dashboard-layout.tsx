@@ -1,4 +1,4 @@
-import { Suspense, useState } from 'react'
+import { Suspense, useState, useEffect } from 'react'
 import { Outlet, useNavigate, useLocation } from '@tanstack/react-router'
 import { Layout, Menu, Avatar, Dropdown, Spin, type MenuProps } from 'antd'
 import {
@@ -23,6 +23,10 @@ export function DashboardLayout() {
   const [collapsed, setCollapsed] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [profileMenuOpen, setProfileMenuOpen] = useState(false)
+
+  useEffect(() => {
+    if (isMobile) setCollapsed(true)
+  }, [location.pathname])
 
   const selectedKey = ['/users', '/profile'].find((k) => location.pathname.startsWith(k)) ?? ''
 
