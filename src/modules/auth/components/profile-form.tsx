@@ -1,6 +1,7 @@
+import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Card, Input } from 'antd'
 import { Controller, useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+
 import { useAuth } from '@/modules/auth/auth.hooks'
 import { updateProfileSchema, type TUpdateProfileSchema } from '@/modules/auth/auth.schemas'
 
@@ -9,7 +10,7 @@ type TProfileFormProps = {
   isPending: boolean
 }
 
-export function ProfileForm({ onUpdateProfile, isPending }: TProfileFormProps) {
+const ProfileForm = ({ onUpdateProfile, isPending }: TProfileFormProps) => {
   const { data: user } = useAuth()
 
   const {
@@ -73,3 +74,5 @@ export function ProfileForm({ onUpdateProfile, isPending }: TProfileFormProps) {
     </Card>
   )
 }
+
+export default ProfileForm

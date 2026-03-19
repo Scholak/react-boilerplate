@@ -1,24 +1,25 @@
-import { lazy } from 'react'
 import { createRoute } from '@tanstack/react-router'
-import { dashboardLayoutRoute } from '@/core/route-parents'
-import { usersQueryOptions, userQueryOptions } from '@/modules/users/users.hooks'
+import { lazy } from 'react'
+
 import { queryClient } from '@/core/lib/query-client'
+import { dashboardLayoutRoute } from '@/core/route-parents'
 
-const ListUsersPage = lazy(() =>
-  import('@/modules/users/pages/list-users.page').then((m) => ({ default: m.ListUsersPage })),
-)
+import { rolesQueryOptions } from '@/modules/roles/roles.hooks'
+import {
+  usersQueryOptions,
+  userQueryOptions,
+  userEditQueryOptions,
+} from '@/modules/users/users.hooks'
 
-const CreateUserPage = lazy(() =>
-  import('@/modules/users/pages/create-user.page').then((m) => ({ default: m.CreateUserPage })),
-)
+const ListUsersPage = lazy(() => import('@/modules/users/pages/list-users.page'))
 
-const EditUserPage = lazy(() =>
-  import('@/modules/users/pages/edit-user.page').then((m) => ({ default: m.EditUserPage })),
-)
+const CreateUserPage = lazy(() => import('@/modules/users/pages/create-user.page'))
 
-const UserDetailPage = lazy(() =>
-  import('@/modules/users/pages/user-detail.page').then((m) => ({ default: m.UserDetailPage })),
-)
+const EditUserPage = lazy(() => import('@/modules/users/pages/edit-user.page'))
+
+const UserDetailPage = lazy(() => import('@/modules/users/pages/user-detail.page'))
+
+const AssignRolesPage = lazy(() => import('@/modules/users/pages/assign-roles.page'))
 
 const usersRoute = createRoute({
   getParentRoute: () => dashboardLayoutRoute,
@@ -41,7 +42,7 @@ const usersDetailRoute = createRoute({
   loader: async ({ params }: { params: { userId: string } }) => {
     await queryClient.ensureQueryData(userQueryOptions(params.userId))
   },
-  component: function UserDetailWrapper() {
+  component: () => {
     const { userId } = usersDetailRoute.useParams()
     return <UserDetailPage userId={userId} />
   },
@@ -51,12 +52,27 @@ const usersEditRoute = createRoute({
   getParentRoute: () => dashboardLayoutRoute,
   path: '/users/$userId/edit',
   loader: async ({ params }: { params: { userId: string } }) => {
-    await queryClient.ensureQueryData(userQueryOptions(params.userId))
+    await queryClient.ensureQueryData(userEditQueryOptions(params.userId))
   },
-  component: function UserEditWrapper() {
-    const { userId } = usersEditRoute.useParams()
-    return <EditUserPage userId={userId} />
-  },
+  component: EditUserPage,
 })
 
-export const usersRoutes = [usersRoute, usersCreateRoute, usersDetailRoute, usersEditRoute] as const
+const usersAssignRolesRoute = createRoute({
+  getParentRoute: () => dashboardLayoutRoute,
+  path: '/users/$userId/roles',
+  loader: async ({ params }: { params: { userId: string } }) => {
+    await Promise.all([
+      queryClient.ensureQueryData(userQueryOptions(params.userId)),
+      queryClient.ensureQueryData(rolesQueryOptions),
+    ])
+  },
+  component: AssignRolesPage,
+})
+
+export const usersRoutes = [
+  usersRoute,
+  usersCreateRoute,
+  usersDetailRoute,
+  usersEditRoute,
+  usersAssignRolesRoute,
+] as const

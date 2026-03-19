@@ -1,11 +1,13 @@
 import { notification } from 'antd'
-import { useDeleteUser } from '@/modules/users/users.hooks'
-import { UsersTable } from '@/modules/users/components/users-table'
+
 import { queryClient } from '@/core/lib/query-client'
+
+import UsersTable from '@/modules/users/components/users-table'
 import { queryKeys } from '@/modules/users/users.constants'
+import { useDeleteUser } from '@/modules/users/users.hooks'
 import type { TUser } from '@/modules/users/users.types'
 
-export function ListUsersPage() {
+const ListUsersPage = () => {
   const mutation = useDeleteUser({
     onSuccess: (user: TUser) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.list })
@@ -26,3 +28,5 @@ export function ListUsersPage() {
 
   return <UsersTable onDeleteUser={onDeleteUser} isDeleting={mutation.isPending} />
 }
+
+export default ListUsersPage

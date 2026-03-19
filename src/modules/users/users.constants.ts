@@ -16,11 +16,13 @@ export const validationMessages = {
 export const queryKeys = {
   list: ['users'] as const,
   detail: (id: string) => ['users', id] as const,
+  edit: (id: string) => ['users', id, 'edit'] as const,
 }
 
 export const endpoints = {
   list: '/users',
   getOne: (userId: string) => `/users/${userId}`,
+  getOneForEdit: (userId: string) => `/users/${userId}/edit`,
   create: '/users',
   update: (userId: string) => `/users/${userId}`,
   remove: (userId: string) => `/users/${userId}`,

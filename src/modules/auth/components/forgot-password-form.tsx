@@ -1,8 +1,9 @@
-import { Button, Input, Typography } from 'antd'
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link } from '@tanstack/react-router'
+import { Button, Input, Typography } from 'antd'
+import { Controller, useForm } from 'react-hook-form'
+
 import { forgotPasswordSchema, type TForgotPasswordSchema } from '@/modules/auth/auth.schemas'
 
 const { Title, Text } = Typography
@@ -12,7 +13,7 @@ type TForgotPasswordFormProps = {
   isPending: boolean
 }
 
-export function ForgotPasswordForm({ onForgotPassword, isPending }: TForgotPasswordFormProps) {
+const ForgotPasswordForm = ({ onForgotPassword, isPending }: TForgotPasswordFormProps) => {
   const {
     control,
     handleSubmit,
@@ -68,3 +69,5 @@ export function ForgotPasswordForm({ onForgotPassword, isPending }: TForgotPassw
     </form>
   )
 }
+
+export default ForgotPasswordForm

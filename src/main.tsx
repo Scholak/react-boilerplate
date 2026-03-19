@@ -1,9 +1,10 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
 import dayjs from 'dayjs'
 import 'dayjs/locale/tr'
-import './index.css'
-import App from './app'
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+
+import '@/index.css'
+import App from '@/app'
 
 dayjs.locale('tr')
 

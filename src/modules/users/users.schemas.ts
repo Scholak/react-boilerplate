@@ -1,4 +1,5 @@
 import { z } from 'zod'
+
 import { validationMessages } from '@/modules/users/users.constants'
 
 const { firstName, lastName, email, password, confirmPassword } = validationMessages

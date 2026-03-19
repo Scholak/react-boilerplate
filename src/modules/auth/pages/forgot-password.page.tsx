@@ -1,9 +1,10 @@
 import { notification } from 'antd'
-import { useForgotPassword } from '@/modules/auth/auth.hooks'
-import { ForgotPasswordForm } from '@/modules/auth/components/forgot-password-form'
-import type { TForgotPasswordSchema } from '@/modules/auth/auth.schemas'
 
-export function ForgotPasswordPage() {
+import { useForgotPassword } from '@/modules/auth/auth.hooks'
+import type { TForgotPasswordSchema } from '@/modules/auth/auth.schemas'
+import ForgotPasswordForm from '@/modules/auth/components/forgot-password-form'
+
+const ForgotPasswordPage = () => {
   const mutation = useForgotPassword({
     onSuccess: () => {
       notification.success({
@@ -24,3 +25,5 @@ export function ForgotPasswordPage() {
 
   return <ForgotPasswordForm onForgotPassword={onForgotPassword} isPending={mutation.isPending} />
 }
+
+export default ForgotPasswordPage

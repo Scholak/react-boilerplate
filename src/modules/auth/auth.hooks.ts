@@ -1,16 +1,8 @@
 import { queryOptions, useMutation, useSuspenseQuery } from '@tanstack/react-query'
-import {
-  signIn,
-  forgotPassword,
-  resetPassword,
-  getAuthUser,
-  updateProfile,
-  changePassword,
-} from '@/modules/auth/auth.service'
-import { queryClient } from '@/core/lib/query-client'
-import { queryKeys } from '@/modules/auth/auth.constants'
+
 import type { TMutationCallbacks } from '@/core/types'
-import type { TSignInResponse, TCurrentUser } from '@/modules/auth/auth.types'
+
+import { queryKeys } from '@/modules/auth/auth.constants'
 import type {
   TSignInSchema,
   TForgotPasswordSchema,
@@ -18,6 +10,16 @@ import type {
   TUpdateProfileSchema,
   TChangePasswordSchema,
 } from '@/modules/auth/auth.schemas'
+import {
+  signIn,
+  signOut as signOutRequest,
+  forgotPassword,
+  resetPassword,
+  getAuthUser,
+  updateProfile,
+  changePassword,
+} from '@/modules/auth/auth.service'
+import type { TSignInResponse, TCurrentUser } from '@/modules/auth/auth.types'
 
 export const authQueryOptions = queryOptions({
   queryKey: queryKeys.auth,
@@ -36,10 +38,12 @@ export function useSignIn({ onSuccess, onError }: TMutationCallbacks<TSignInResp
   })
 }
 
-export function useSignOut() {
-  return () => {
-    queryClient.clear()
-  }
+export function useSignOut({ onSuccess, onError }: TMutationCallbacks) {
+  return useMutation({
+    mutationFn: signOutRequest,
+    onSuccess,
+    onError,
+  })
 }
 
 export function useForgotPassword({ onSuccess, onError }: TMutationCallbacks) {

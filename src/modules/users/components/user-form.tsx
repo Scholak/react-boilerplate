@@ -1,7 +1,8 @@
-import { Button, Card, Input } from 'antd'
-import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
+import { Button, Card, Input } from 'antd'
+import { Controller, useForm } from 'react-hook-form'
+
 import { useUser } from '@/modules/users/users.hooks'
 import {
   createUserSchema,
@@ -22,7 +23,7 @@ type TEditUserFormProps = {
   isPending: boolean
 }
 
-export function CreateUserForm({ onCreateUser, isPending }: TCreateUserFormProps) {
+const CreateUserForm = ({ onCreateUser, isPending }: TCreateUserFormProps) => {
   const navigate = useNavigate()
 
   const {
@@ -121,7 +122,8 @@ export function CreateUserForm({ onCreateUser, isPending }: TCreateUserFormProps
   )
 }
 
-export function EditUserForm({ userId, onUpdateUser, isPending }: TEditUserFormProps) {
+export const EditUserForm = ({ userId, onUpdateUser, isPending }: TEditUserFormProps) => {
+
   const { data: user } = useUser(userId)
   const navigate = useNavigate()
 
@@ -191,3 +193,5 @@ export function EditUserForm({ userId, onUpdateUser, isPending }: TEditUserFormP
     </Card>
   )
 }
+
+export default CreateUserForm

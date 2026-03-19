@@ -23,6 +23,7 @@ export const queryKeys = {
 
 export const endpoints = {
   signIn: '/auth/sign-in',
+  signOut: '/auth/sign-out',
   forgotPassword: '/auth/forgot-password',
   resetPassword: '/auth/reset-password',
   me: '/auth/me',

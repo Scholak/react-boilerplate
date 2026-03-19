@@ -1,6 +1,8 @@
-import { Card, Typography } from 'antd'
 import { CalendarOutlined } from '@ant-design/icons'
+import { Card, Typography } from 'antd'
+
 import { formatDate } from '@/core/utils/format-date'
+
 import type { TUser } from '@/modules/users/users.types'
 
 const { Text } = Typography
@@ -9,7 +11,7 @@ type TUserDetailProps = {
   user: TUser
 }
 
-export function UserDetail({ user }: TUserDetailProps) {
+const UserDetail = ({ user }: TUserDetailProps) => {
   return (
     <Card title="Kullanıcı Bilgileri">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -53,3 +55,5 @@ export function UserDetail({ user }: TUserDetailProps) {
     </Card>
   )
 }
+
+export default UserDetail

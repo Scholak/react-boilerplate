@@ -1,17 +1,24 @@
-import { useMemo, useState } from 'react'
-import { Button, Card, Input, Popconfirm, Table, Typography, type TableColumnsType } from 'antd'
 import {
   PlusOutlined,
   EditOutlined,
   EyeOutlined,
   DeleteOutlined,
   SearchOutlined,
+  SafetyCertificateOutlined,
+  ExclamationCircleOutlined,
 } from '@ant-design/icons'
 import { useNavigate } from '@tanstack/react-router'
+import { Button, Card, Input, Modal, Table, Tag, Typography, type TableColumnsType } from 'antd'
+import { useMemo, useState } from 'react'
+
+import HasPermission from '@/core/components/has-permission'
+import { PERMISSIONS } from '@/core/lib/permissions'
+import { formatDate } from '@/core/utils/format-date'
+import { getInitials } from '@/core/utils/get-initials'
+
+import { useAuth } from '@/modules/auth/auth.hooks'
 import { useUsers } from '@/modules/users/users.hooks'
 import type { TUser } from '@/modules/users/users.types'
-import { getInitials } from '@/core/utils/get-initials'
-import { formatDate } from '@/core/utils/format-date'
 
 const { Title, Text } = Typography
 
@@ -20,10 +27,12 @@ type TUsersTableProps = {
   isDeleting: boolean
 }
 
-export function UsersTable({ onDeleteUser, isDeleting }: TUsersTableProps) {
+const UsersTable = ({ onDeleteUser, isDeleting }: TUsersTableProps) => {
   const { data: users } = useUsers()
+  const { data: currentUser } = useAuth()
   const navigate = useNavigate()
   const [search, setSearch] = useState('')
+  const [deleteTarget, setDeleteTarget] = useState<TUser | null>(null)
 
   const filtered = useMemo(
     () =>
@@ -32,6 +41,12 @@ export function UsersTable({ onDeleteUser, isDeleting }: TUsersTableProps) {
       ),
     [users, search],
   )
+
+  const handleDeleteConfirm = async () => {
+    if (!deleteTarget) return
+    await onDeleteUser(deleteTarget)
+    setDeleteTarget(null)
+  }
 
   const columns: TableColumnsType<TUser> = [
     {
@@ -70,10 +85,29 @@ export function UsersTable({ onDeleteUser, isDeleting }: TUsersTableProps) {
       onFilter: (value, record) => record.email === value,
     },
     {
+      title: 'Roller',
+      key: 'roles',
+      responsive: ['md'],
+      render: (_, record) =>
+        record.roles.length === 0 ? (
+          <Text type="secondary" className="text-xs">
+            —
+          </Text>
+        ) : (
+          <div className="flex flex-wrap gap-1">
+            {record.roles.map((role) => (
+              <Tag key={role.id} color="geekblue">
+                {role.name}
+              </Tag>
+            ))}
+          </div>
+        ),
+    },
+    {
       title: 'Oluşturulma Tarihi',
       dataIndex: 'createdAt',
       key: 'createdAt',
-      responsive: ['md'],
+      responsive: ['lg'],
       sorter: (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
       render: (val: string) => formatDate(val),
     },
@@ -83,26 +117,41 @@ export function UsersTable({ onDeleteUser, isDeleting }: TUsersTableProps) {
       width: 120,
       render: (_, record) => (
         <div className="flex gap-2">
-          <Button
-            icon={<EyeOutlined />}
-            size="small"
-            onClick={() => navigate({ to: '/users/$userId', params: { userId: record.id } })}
-          />
-          <Button
-            icon={<EditOutlined />}
-            size="small"
-            onClick={() => navigate({ to: '/users/$userId/edit', params: { userId: record.id } })}
-          />
-          <Popconfirm
-            title="Kullanıcıyı sil"
-            description="Bu kullanıcıyı silmek istediğinize emin misiniz?"
-            okText="Evet, sil"
-            cancelText="İptal"
-            okType="danger"
-            onConfirm={() => onDeleteUser(record)}
-          >
-            <Button icon={<DeleteOutlined />} size="small" danger loading={isDeleting} />
-          </Popconfirm>
+          <HasPermission permission={PERMISSIONS.USERS_DETAIL}>
+            <Button
+              icon={<EyeOutlined />}
+              size="small"
+              onClick={() => navigate({ to: '/users/$userId', params: { userId: record.id } })}
+            />
+          </HasPermission>
+          <HasPermission permission={PERMISSIONS.USERS_EDIT}>
+            <Button
+              icon={<EditOutlined />}
+              size="small"
+              onClick={() =>
+                navigate({ to: '/users/$userId/edit', params: { userId: record.id } })
+              }
+            />
+          </HasPermission>
+          <HasPermission permission={PERMISSIONS.USERS_ASSIGN_ROLES}>
+            <Button
+              icon={<SafetyCertificateOutlined />}
+              size="small"
+              onClick={() =>
+                navigate({ to: '/users/$userId/roles', params: { userId: record.id } })
+              }
+            />
+          </HasPermission>
+          {record.id !== currentUser.id && (
+            <HasPermission permission={PERMISSIONS.USERS_DELETE}>
+              <Button
+                icon={<DeleteOutlined />}
+                size="small"
+                danger
+                onClick={() => setDeleteTarget(record)}
+              />
+            </HasPermission>
+          )}
         </div>
       ),
     },
@@ -117,13 +166,15 @@ export function UsersTable({ onDeleteUser, isDeleting }: TUsersTableProps) {
           </Title>
           <Text type="secondary">{users.length} toplam kullanıcı</Text>
         </div>
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          onClick={() => navigate({ to: '/users/create' })}
-        >
-          <span className="hidden sm:inline">Kullanıcı Oluştur</span>
-        </Button>
+        <HasPermission permission={PERMISSIONS.USERS_CREATE}>
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => navigate({ to: '/users/create' })}
+          >
+            <span className="hidden sm:inline">Kullanıcı Oluştur</span>
+          </Button>
+        </HasPermission>
       </div>
 
       <Card styles={{ body: { padding: 0 } }}>
@@ -146,6 +197,31 @@ export function UsersTable({ onDeleteUser, isDeleting }: TUsersTableProps) {
           />
         </div>
       </Card>
+
+      <Modal
+        title={
+          <div className="flex items-center gap-2">
+            <ExclamationCircleOutlined className="text-red-500" />
+            <span>Kullanıcıyı Sil</span>
+          </div>
+        }
+        open={!!deleteTarget}
+        onOk={handleDeleteConfirm}
+        onCancel={() => setDeleteTarget(null)}
+        okText="Evet, Sil"
+        cancelText="İptal"
+        okButtonProps={{ danger: true, loading: isDeleting }}
+        centered
+      >
+        <p>
+          <strong>
+            {deleteTarget?.firstName} {deleteTarget?.lastName}
+          </strong>{' '}
+          adlı kullanıcıyı silmek istediğinize emin misiniz? Bu işlem geri alınamaz.
+        </p>
+      </Modal>
     </div>
   )
 }
+
+export default UsersTable

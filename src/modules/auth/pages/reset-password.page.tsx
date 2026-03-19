@@ -1,11 +1,12 @@
-import { notification } from 'antd'
 import { useNavigate } from '@tanstack/react-router'
+import { notification } from 'antd'
+
 import { useResetPassword } from '@/modules/auth/auth.hooks'
-import { ResetPasswordForm } from '@/modules/auth/components/reset-password-form'
 import { resetPasswordRoute } from '@/modules/auth/auth.routes'
 import type { TResetPasswordSchema } from '@/modules/auth/auth.schemas'
+import ResetPasswordForm from '@/modules/auth/components/reset-password-form'
 
-export function ResetPasswordPage() {
+const ResetPasswordPage = () => {
   const navigate = useNavigate()
   const { token } = resetPasswordRoute.useSearch()
 
@@ -35,3 +36,5 @@ export function ResetPasswordPage() {
     />
   )
 }
+
+export default ResetPasswordPage

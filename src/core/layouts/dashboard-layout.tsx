@@ -1,42 +1,76 @@
-import { Suspense, useState, useEffect } from 'react'
-import { Outlet, useNavigate, useLocation } from '@tanstack/react-router'
-import { Layout, Menu, Avatar, Dropdown, Spin, type MenuProps } from 'antd'
 import {
   UserOutlined,
   TeamOutlined,
+  SafetyCertificateOutlined,
   LogoutOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   DownOutlined,
 } from '@ant-design/icons'
-import { useAuth, useSignOut } from '@/modules/auth/auth.hooks'
-import { getInitials } from '@/core/utils/get-initials'
+import { Outlet, useNavigate, useLocation } from '@tanstack/react-router'
+import { Layout, Menu, Avatar, Dropdown, Spin, notification, type MenuProps } from 'antd'
+import { Suspense, useState, useEffect } from 'react'
+
 import { config } from '@/core/config'
+import { useHasPermission } from '@/core/hooks/use-has-permission'
+import { queryClient } from '@/core/lib/query-client'
+import { PERMISSIONS } from '@/core/lib/permissions'
+import { getInitials } from '@/core/utils/get-initials'
+
+import { useAuth, useSignOut } from '@/modules/auth/auth.hooks'
 
 const { Sider, Header, Content } = Layout
 
-export function DashboardLayout() {
+const DashboardLayout = () => {
   const { data: user } = useAuth()
-  const signOut = useSignOut()
   const navigate = useNavigate()
+  const { mutate: signOut } = useSignOut({
+    onSuccess: async () => {
+      queryClient.clear()
+      await navigate({ to: '/sign-in', search: { isSignedOut: true } })
+    },
+    onError: () => {
+      notification.error({
+        message: 'Çıkış başarısız',
+        description: 'Çıkış yapılırken bir hata oluştu. Lütfen tekrar deneyin.',
+      })
+    },
+  })
   const location = useLocation()
   const [collapsed, setCollapsed] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [profileMenuOpen, setProfileMenuOpen] = useState(false)
+  const canListUsers = useHasPermission(PERMISSIONS.USERS_LIST)
+  const canListRoles = useHasPermission(PERMISSIONS.ROLES_LIST)
 
   useEffect(() => {
     if (isMobile) setCollapsed(true)
-  }, [location.pathname])
+  }, [location.pathname, isMobile])
 
-  const selectedKey = ['/users', '/profile'].find((k) => location.pathname.startsWith(k)) ?? ''
+  const selectedKey =
+    ['/users', '/roles', '/profile'].find((k) => location.pathname.startsWith(k)) ?? ''
 
   const sideMenuItems: MenuProps['items'] = [
-    {
-      key: '/users',
-      icon: <TeamOutlined />,
-      label: 'Kullanıcılar',
-      onClick: () => navigate({ to: '/users' }),
-    },
+    ...(canListUsers
+      ? [
+          {
+            key: '/users',
+            icon: <TeamOutlined />,
+            label: 'Kullanıcılar',
+            onClick: () => navigate({ to: '/users' }),
+          },
+        ]
+      : []),
+    ...(canListRoles
+      ? [
+          {
+            key: '/roles',
+            icon: <SafetyCertificateOutlined />,
+            label: 'Roller',
+            onClick: () => navigate({ to: '/roles' }),
+          },
+        ]
+      : []),
     {
       key: '/profile',
       icon: <UserOutlined />,
@@ -58,10 +92,7 @@ export function DashboardLayout() {
       icon: <LogoutOutlined />,
       label: 'Çıkış Yap',
       danger: true,
-      onClick: async () => {
-        signOut()
-        await navigate({ to: '/sign-in' })
-      },
+      onClick: () => signOut(),
     },
   ]
 
@@ -173,3 +204,5 @@ export function DashboardLayout() {
     </Layout>
   )
 }
+
+export default DashboardLayout

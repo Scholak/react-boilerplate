@@ -1,7 +1,11 @@
-import { Avatar, Button, Card, Typography } from 'antd'
-import { EditOutlined, MailOutlined } from '@ant-design/icons'
+import { EditOutlined, MailOutlined, SafetyCertificateOutlined } from '@ant-design/icons'
 import { useNavigate } from '@tanstack/react-router'
+import { Avatar, Button, Card, Typography } from 'antd'
+
+import HasPermission from '@/core/components/has-permission'
+import { PERMISSIONS } from '@/core/lib/permissions'
 import { getInitials } from '@/core/utils/get-initials'
+
 import type { TUser } from '@/modules/users/users.types'
 
 const { Title, Text } = Typography
@@ -10,7 +14,7 @@ type TUserDetailHeaderProps = {
   user: TUser
 }
 
-export function UserDetailHeader({ user }: TUserDetailHeaderProps) {
+const UserDetailHeader = ({ user }: TUserDetailHeaderProps) => {
   const navigate = useNavigate()
 
   return (
@@ -30,14 +34,28 @@ export function UserDetailHeader({ user }: TUserDetailHeaderProps) {
             </div>
           </div>
         </div>
-        <Button
-          type="primary"
-          icon={<EditOutlined />}
-          onClick={() => navigate({ to: '/users/$userId/edit', params: { userId: user.id } })}
-        >
-          Düzenle
-        </Button>
+        <div className="flex gap-2">
+          <HasPermission permission={PERMISSIONS.USERS_ASSIGN_ROLES}>
+            <Button
+              icon={<SafetyCertificateOutlined />}
+              onClick={() => navigate({ to: '/users/$userId/roles', params: { userId: user.id } })}
+            >
+              Roller
+            </Button>
+          </HasPermission>
+          <HasPermission permission={PERMISSIONS.USERS_EDIT}>
+            <Button
+              type="primary"
+              icon={<EditOutlined />}
+              onClick={() => navigate({ to: '/users/$userId/edit', params: { userId: user.id } })}
+            >
+              Düzenle
+            </Button>
+          </HasPermission>
+        </div>
       </div>
     </Card>
   )
 }
+
+export default UserDetailHeader

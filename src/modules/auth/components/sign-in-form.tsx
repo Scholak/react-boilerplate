@@ -1,7 +1,8 @@
-import { Button, Input, Typography } from 'antd'
-import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link } from '@tanstack/react-router'
+import { Button, Input, Typography } from 'antd'
+import { Controller, useForm } from 'react-hook-form'
+
 import { signInSchema, type TSignInSchema } from '@/modules/auth/auth.schemas'
 
 const { Title, Text } = Typography
@@ -11,7 +12,7 @@ type TSignInFormProps = {
   isPending: boolean
 }
 
-export function SignInForm({ onSignIn, isPending }: TSignInFormProps) {
+const SignInForm = ({ onSignIn, isPending }: TSignInFormProps) => {
   const {
     control,
     handleSubmit,
@@ -73,3 +74,5 @@ export function SignInForm({ onSignIn, isPending }: TSignInFormProps) {
     </form>
   )
 }
+
+export default SignInForm

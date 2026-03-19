@@ -1,26 +1,15 @@
-import { lazy } from 'react'
 import { createRoute } from '@tanstack/react-router'
+import { lazy } from 'react'
+
 import { authLayoutRoute, dashboardLayoutRoute } from '@/core/route-parents'
 
-const SignInPage = lazy(() =>
-  import('@/modules/auth/pages/sign-in.page').then((m) => ({ default: m.SignInPage })),
-)
+const SignInPage = lazy(() => import('@/modules/auth/pages/sign-in.page'))
 
-const ForgotPasswordPage = lazy(() =>
-  import('@/modules/auth/pages/forgot-password.page').then((m) => ({
-    default: m.ForgotPasswordPage,
-  })),
-)
+const ForgotPasswordPage = lazy(() => import('@/modules/auth/pages/forgot-password.page'))
 
-const ResetPasswordPage = lazy(() =>
-  import('@/modules/auth/pages/reset-password.page').then((m) => ({
-    default: m.ResetPasswordPage,
-  })),
-)
+const ResetPasswordPage = lazy(() => import('@/modules/auth/pages/reset-password.page'))
 
-const ProfilePage = lazy(() =>
-  import('@/modules/auth/pages/profile.page').then((m) => ({ default: m.ProfilePage })),
-)
+const ProfilePage = lazy(() => import('@/modules/auth/pages/profile.page'))
 
 const signInRoute = createRoute({
   getParentRoute: () => authLayoutRoute,

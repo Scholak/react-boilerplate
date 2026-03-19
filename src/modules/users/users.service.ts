@@ -1,4 +1,5 @@
 import { api } from '@/core/lib/api'
+
 import { endpoints } from '@/modules/users/users.constants'
 import type { TCreateUserSchema, TUpdateUserSchema } from '@/modules/users/users.schemas'
 import type { TUser } from '@/modules/users/users.types'
@@ -10,6 +11,11 @@ export const getUsers = async (): Promise<TUser[]> => {
 
 export const getUser = async (userId: string): Promise<TUser> => {
   const { data } = await api.get(endpoints.getOne(userId))
+  return data.data
+}
+
+export const getUserForEdit = async (userId: string): Promise<TUser> => {
+  const { data } = await api.get(endpoints.getOneForEdit(userId))
   return data.data
 }
 

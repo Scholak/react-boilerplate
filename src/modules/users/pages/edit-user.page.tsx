@@ -1,25 +1,25 @@
+import { useNavigate, useParams } from '@tanstack/react-router'
 import { notification, Typography } from 'antd'
-import { useNavigate } from '@tanstack/react-router'
-import { useUser, useUpdateUser } from '@/modules/users/users.hooks'
-import { EditUserForm } from '@/modules/users/components/edit-user-form'
+
 import { queryClient } from '@/core/lib/query-client'
+
+import EditUserForm from '@/modules/users/components/edit-user-form'
 import { queryKeys } from '@/modules/users/users.constants'
-import type { TUser } from '@/modules/users/users.types'
+import { useUserForEdit, useUpdateUser } from '@/modules/users/users.hooks'
 import type { TUpdateUserSchema } from '@/modules/users/users.schemas'
+import type { TUser } from '@/modules/users/users.types'
 
 const { Title, Text } = Typography
 
-type TEditUserPageProps = {
-  userId: string
-}
-
-export function EditUserPage({ userId }: TEditUserPageProps) {
+const EditUserPage = () => {
+  const { userId }: { userId: string } = useParams({ strict: false })
   const navigate = useNavigate()
-  const { data: user } = useUser(userId)
+  const { data: user } = useUserForEdit(userId)
 
   const mutation = useUpdateUser(userId, {
     onSuccess: async (updated: TUser) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.list })
+      queryClient.invalidateQueries({ queryKey: queryKeys.edit(userId) })
       queryClient.setQueryData(queryKeys.detail(userId), updated)
       notification.success({
         message: 'Kullanıcı güncellendi',
@@ -50,3 +50,5 @@ export function EditUserPage({ userId }: TEditUserPageProps) {
     </div>
   )
 }
+
+export default EditUserPage

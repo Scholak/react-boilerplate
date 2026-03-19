@@ -1,7 +1,8 @@
-import { Button, Card, Input } from 'antd'
-import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
+import { Button, Card, Input } from 'antd'
+import { Controller, useForm } from 'react-hook-form'
+
 import { updateUserSchema, type TUpdateUserSchema } from '@/modules/users/users.schemas'
 import type { TUser } from '@/modules/users/users.types'
 
@@ -11,7 +12,7 @@ type TEditUserFormProps = {
   isPending: boolean
 }
 
-export function EditUserForm({ user, onUpdateUser, isPending }: TEditUserFormProps) {
+const EditUserForm = ({ user, onUpdateUser, isPending }: TEditUserFormProps) => {
   const navigate = useNavigate()
 
   const {
@@ -80,3 +81,5 @@ export function EditUserForm({ user, onUpdateUser, isPending }: TEditUserFormPro
     </Card>
   )
 }
+
+export default EditUserForm

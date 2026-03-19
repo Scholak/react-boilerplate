@@ -1,11 +1,12 @@
-import { Suspense } from 'react'
 import { Outlet } from '@tanstack/react-router'
 import { Card, Spin, Typography } from 'antd'
+import { Suspense } from 'react'
+
 import { config } from '@/core/config'
 
 const { Title } = Typography
 
-export function AuthLayout() {
+const AuthLayout = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4">
       <div className="w-full max-w-md">
@@ -34,3 +35,5 @@ export function AuthLayout() {
     </div>
   )
 }
+
+export default AuthLayout

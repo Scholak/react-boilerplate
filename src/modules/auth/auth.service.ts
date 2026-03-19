@@ -1,4 +1,5 @@
 import { api } from '@/core/lib/api'
+
 import { endpoints } from '@/modules/auth/auth.constants'
 import type {
   TSignInSchema,
@@ -12,6 +13,10 @@ import type { TSignInResponse, TCurrentUser } from '@/modules/auth/auth.types'
 export const signIn = async (body: TSignInSchema): Promise<TSignInResponse> => {
   const { data } = await api.post(endpoints.signIn, body)
   return data.data
+}
+
+export const signOut = async (): Promise<void> => {
+  await api.post(endpoints.signOut)
 }
 
 export const forgotPassword = async (body: TForgotPasswordSchema): Promise<void> => {

@@ -1,15 +1,17 @@
-import { useUser } from '@/modules/users/users.hooks'
-import { UserDetail } from '@/modules/users/components/user-detail'
-import { UserDetailHeader } from '@/modules/users/components/user-detail-header'
-import { Button, Space } from 'antd'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { useNavigate } from '@tanstack/react-router'
+import { Button, Space } from 'antd'
+
+import UserDetail from '@/modules/users/components/user-detail'
+import UserDetailHeader from '@/modules/users/components/user-detail-header'
+import UserRoles from '@/modules/users/components/user-roles'
+import { useUser } from '@/modules/users/users.hooks'
 
 type TUserDetailPageProps = {
   userId: string
 }
 
-export function UserDetailPage({ userId }: TUserDetailPageProps) {
+const UserDetailPage = ({ userId }: TUserDetailPageProps) => {
   const navigate = useNavigate()
   const { data: user } = useUser(userId)
 
@@ -23,6 +25,9 @@ export function UserDetailPage({ userId }: TUserDetailPageProps) {
 
       <UserDetailHeader user={user} />
       <UserDetail user={user} />
+      <UserRoles user={user} />
     </Space>
   )
 }
+
+export default UserDetailPage

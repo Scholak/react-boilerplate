@@ -1,15 +1,17 @@
-import { notification, Typography } from 'antd'
 import { useNavigate } from '@tanstack/react-router'
-import { useCreateUser } from '@/modules/users/users.hooks'
-import { CreateUserForm } from '@/modules/users/components/create-user-form'
+import { notification, Typography } from 'antd'
+
 import { queryClient } from '@/core/lib/query-client'
+
+import CreateUserForm from '@/modules/users/components/create-user-form'
 import { queryKeys } from '@/modules/users/users.constants'
-import type { TUser } from '@/modules/users/users.types'
+import { useCreateUser } from '@/modules/users/users.hooks'
 import type { TCreateUserSchema } from '@/modules/users/users.schemas'
+import type { TUser } from '@/modules/users/users.types'
 
 const { Title, Text } = Typography
 
-export function CreateUserPage() {
+const CreateUserPage = () => {
   const navigate = useNavigate()
 
   const mutation = useCreateUser({
@@ -44,3 +46,5 @@ export function CreateUserPage() {
     </div>
   )
 }
+
+export default CreateUserPage

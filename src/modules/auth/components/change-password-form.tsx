@@ -1,6 +1,7 @@
+import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Card, Input } from 'antd'
 import { Controller, useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+
 import { changePasswordSchema, type TChangePasswordSchema } from '@/modules/auth/auth.schemas'
 
 type TChangePasswordFormProps = {
@@ -8,7 +9,7 @@ type TChangePasswordFormProps = {
   isPending: boolean
 }
 
-export function ChangePasswordForm({ onChangePassword, isPending }: TChangePasswordFormProps) {
+const ChangePasswordForm = ({ onChangePassword, isPending }: TChangePasswordFormProps) => {
   const {
     control,
     handleSubmit,
@@ -81,3 +82,5 @@ export function ChangePasswordForm({ onChangePassword, isPending }: TChangePassw
     </Card>
   )
 }
+
+export default ChangePasswordForm

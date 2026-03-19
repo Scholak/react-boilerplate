@@ -1,8 +1,9 @@
-import { Button, Input, Typography } from 'antd'
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link } from '@tanstack/react-router'
+import { Button, Input, Typography } from 'antd'
+import { Controller, useForm } from 'react-hook-form'
+
 import { resetPasswordSchema, type TResetPasswordSchema } from '@/modules/auth/auth.schemas'
 
 const { Title, Text } = Typography
@@ -13,7 +14,7 @@ type TResetPasswordFormProps = {
   isPending: boolean
 }
 
-export function ResetPasswordForm({ token, onResetPassword, isPending }: TResetPasswordFormProps) {
+const ResetPasswordForm = ({ token, onResetPassword, isPending }: TResetPasswordFormProps) => {
   const {
     control,
     handleSubmit,
@@ -85,3 +86,5 @@ export function ResetPasswordForm({ token, onResetPassword, isPending }: TResetP
     </form>
   )
 }
+
+export default ResetPasswordForm
