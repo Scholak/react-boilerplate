@@ -1,5 +1,6 @@
+import { ArrowLeftOutlined } from '@ant-design/icons'
 import { useNavigate } from '@tanstack/react-router'
-import { notification, Typography } from 'antd'
+import { Button, notification, Typography } from 'antd'
 
 import { queryClient } from '@/core/lib/query-client'
 
@@ -33,6 +34,13 @@ const CreateRolePage = () => {
   return (
     <div>
       <div className="mb-5">
+        <Button
+          icon={<ArrowLeftOutlined />}
+          onClick={() => navigate({ to: '/roles' })}
+          className="mb-4"
+        >
+          Geri
+        </Button>
         <Title level={4} style={{ marginBottom: 4 }}>
           Rol Oluştur
         </Title>

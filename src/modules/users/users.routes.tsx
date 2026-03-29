@@ -9,6 +9,7 @@ import {
   usersQueryOptions,
   userQueryOptions,
   userEditQueryOptions,
+  userRolesQueryOptions,
 } from '@/modules/users/users.hooks'
 
 const ListUsersPage = lazy(() => import('@/modules/users/pages/list-users.page'))
@@ -62,7 +63,7 @@ const usersAssignRolesRoute = createRoute({
   path: '/users/$userId/roles',
   loader: async ({ params }: { params: { userId: string } }) => {
     await Promise.all([
-      queryClient.ensureQueryData(userQueryOptions(params.userId)),
+      queryClient.ensureQueryData(userRolesQueryOptions(params.userId)),
       queryClient.ensureQueryData(rolesQueryOptions),
     ])
   },

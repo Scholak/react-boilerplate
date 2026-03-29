@@ -17,6 +17,7 @@ export const queryKeys = {
   list: ['users'] as const,
   detail: (id: string) => ['users', id] as const,
   edit: (id: string) => ['users', id, 'edit'] as const,
+  roles: (id: string) => ['users', id, 'roles'] as const,
 }
 
 export const endpoints = {
@@ -26,4 +27,6 @@ export const endpoints = {
   create: '/users',
   update: (userId: string) => `/users/${userId}`,
   remove: (userId: string) => `/users/${userId}`,
+  getRoles: (userId: string) => `/users/${userId}/roles`,
+  updateRoles: (userId: string) => `/users/${userId}/roles`,
 }

@@ -1,5 +1,6 @@
+import { ArrowLeftOutlined } from '@ant-design/icons'
 import { useNavigate, useParams } from '@tanstack/react-router'
-import { notification, Space, Typography } from 'antd'
+import { Button, notification, Space, Typography } from 'antd'
 
 import { queryClient } from '@/core/lib/query-client'
 
@@ -36,6 +37,11 @@ const EditRolePage = () => {
 
   return (
     <Space orientation="vertical" size={16} className="w-full">
+      <div>
+        <Button icon={<ArrowLeftOutlined />} onClick={() => navigate({ to: '/roles' })}>
+          Geri
+        </Button>
+      </div>
       <div>
         <Title level={4} style={{ marginBottom: 4 }}>
           Rolü Düzenle

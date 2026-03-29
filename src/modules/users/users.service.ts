@@ -2,7 +2,7 @@ import { api } from '@/core/lib/api'
 
 import { endpoints } from '@/modules/users/users.constants'
 import type { TCreateUserSchema, TUpdateUserSchema } from '@/modules/users/users.schemas'
-import type { TUser } from '@/modules/users/users.types'
+import type { TUser, TUserRole } from '@/modules/users/users.types'
 
 export const getUsers = async (): Promise<TUser[]> => {
   const { data } = await api.get(endpoints.list)
@@ -31,4 +31,13 @@ export const updateUser = async (userId: string, body: TUpdateUserSchema): Promi
 
 export const deleteUser = async (userId: string): Promise<void> => {
   await api.delete(endpoints.remove(userId))
+}
+
+export const getUserRoles = async (userId: string): Promise<TUserRole[]> => {
+  const { data } = await api.get(endpoints.getRoles(userId))
+  return data.data
+}
+
+export const updateUserRoles = async (userId: string, roleIds: string[]): Promise<void> => {
+  await api.put(endpoints.updateRoles(userId), { roleIds })
 }

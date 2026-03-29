@@ -8,8 +8,10 @@ import {
   getUsers,
   getUser,
   getUserForEdit,
+  getUserRoles,
   createUser,
   updateUser,
+  updateUserRoles,
   deleteUser,
 } from '@/modules/users/users.service'
 import type { TUser } from '@/modules/users/users.types'
@@ -31,6 +33,12 @@ export const userEditQueryOptions = (userId: string) =>
     queryFn: () => getUserForEdit(userId),
   })
 
+export const userRolesQueryOptions = (userId: string) =>
+  queryOptions({
+    queryKey: queryKeys.roles(userId),
+    queryFn: () => getUserRoles(userId),
+  })
+
 export function useUsers() {
   return useSuspenseQuery(usersQueryOptions)
 }
@@ -41,6 +49,10 @@ export function useUser(userId: string) {
 
 export function useUserForEdit(userId: string) {
   return useSuspenseQuery(userEditQueryOptions(userId))
+}
+
+export function useUserRoles(userId: string) {
+  return useSuspenseQuery(userRolesQueryOptions(userId))
 }
 
 export function useCreateUser({ onSuccess, onError }: TMutationCallbacks<TUser>) {
@@ -62,6 +74,14 @@ export function useUpdateUser(userId: string, { onSuccess, onError }: TMutationC
 export function useDeleteUser({ onSuccess, onError }: TMutationCallbacks<TUser>) {
   return useMutation({
     mutationFn: (user: TUser) => deleteUser(user.id).then(() => user),
+    onSuccess,
+    onError,
+  })
+}
+
+export function useUpdateUserRoles(userId: string, { onSuccess, onError }: TMutationCallbacks) {
+  return useMutation({
+    mutationFn: (roleIds: string[]) => updateUserRoles(userId, roleIds),
     onSuccess,
     onError,
   })

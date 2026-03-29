@@ -1,5 +1,6 @@
+import { ArrowLeftOutlined } from '@ant-design/icons'
 import { useNavigate, useParams } from '@tanstack/react-router'
-import { notification, Typography } from 'antd'
+import { Button, notification, Space, Typography } from 'antd'
 
 import { queryClient } from '@/core/lib/query-client'
 
@@ -39,7 +40,12 @@ const EditUserPage = () => {
   const onUpdateUser = async (values: TUpdateUserSchema) => await mutation.mutateAsync(values)
 
   return (
-    <div>
+    <Space orientation="vertical" size={16} className="w-full">
+      <div>
+        <Button icon={<ArrowLeftOutlined />} onClick={() => navigate({ to: '/users' })}>
+          Geri
+        </Button>
+      </div>
       <div className="mb-5">
         <Title level={4} style={{ marginBottom: 4 }}>
           Kullanıcıyı Düzenle
@@ -47,7 +53,7 @@ const EditUserPage = () => {
         <Text type="secondary">Kullanıcı bilgilerini güncelleyin.</Text>
       </div>
       <EditUserForm user={user} onUpdateUser={onUpdateUser} isPending={mutation.isPending} />
-    </div>
+    </Space>
   )
 }
 
