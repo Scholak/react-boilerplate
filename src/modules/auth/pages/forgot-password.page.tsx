@@ -1,5 +1,6 @@
 import { notification } from 'antd'
 
+import { authNotifications } from '@/modules/auth/auth.constants'
 import { useForgotPassword } from '@/modules/auth/auth.hooks'
 import type { TForgotPasswordSchema } from '@/modules/auth/auth.schemas'
 import ForgotPasswordForm from '@/modules/auth/components/forgot-password-form'
@@ -7,16 +8,10 @@ import ForgotPasswordForm from '@/modules/auth/components/forgot-password-form'
 const ForgotPasswordPage = () => {
   const mutation = useForgotPassword({
     onSuccess: () => {
-      notification.success({
-        message: 'Bağlantı gönderildi',
-        description: 'E-posta adresiniz kayıtlıysa şifre sıfırlama bağlantısı gönderildi.',
-      })
+      notification.success(authNotifications.forgotPasswordSuccess)
     },
     onError: () => {
-      notification.error({
-        message: 'Bir hata oluştu',
-        description: 'İşlem gerçekleştirilemedi. Lütfen daha sonra tekrar deneyin.',
-      })
+      notification.error(authNotifications.forgotPasswordError)
     },
   })
 

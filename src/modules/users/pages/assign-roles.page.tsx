@@ -6,7 +6,7 @@ import { useState } from 'react'
 import { queryClient } from '@/core/lib/query-client'
 
 import { useRoles } from '@/modules/roles/roles.hooks'
-import { queryKeys } from '@/modules/users/users.constants'
+import { queryKeys, usersNotifications } from '@/modules/users/users.constants'
 import { useUserRoles, useUpdateUserRoles } from '@/modules/users/users.hooks'
 
 const { Title, Text } = Typography
@@ -27,10 +27,11 @@ const AssignRolesPage = () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.detail(userId) })
       queryClient.invalidateQueries({ queryKey: queryKeys.edit(userId) })
       queryClient.invalidateQueries({ queryKey: queryKeys.roles(userId) })
-      notification.success({ message: 'Roller güncellendi' })
+      notification.success(usersNotifications.updateUserRolesSuccess)
       navigate({ to: '/users/$userId', params: { userId } })
     },
-    onError: () => notification.error({ message: 'Roller güncellenemedi' }),
+    onError: () =>
+      notification.error(usersNotifications.updateUserRolesError),
   })
 
   return (

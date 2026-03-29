@@ -1,3 +1,14 @@
+export const usersNotifications = {
+  createUserSuccess: { message: 'Kullanıcı Oluşturuldu', description: 'Kullanıcı başarıyla oluşturuldu.' },
+  createUserError: { message: 'Oluşturma Başarısız', description: 'Kullanıcı oluşturulurken bir hata oluştu. E-posta adresi zaten kullanımda olabilir.' },
+  updateUserSuccess: { message: 'Kullanıcı Güncellendi', description: 'Kullanıcı başarıyla güncellendi.' },
+  updateUserError: { message: 'Güncelleme Başarısız', description: 'Kullanıcı güncellenirken bir hata oluştu. E-posta adresi zaten kullanımda olabilir.' },
+  deleteUserSuccess: { message: 'Kullanıcı Silindi', description: 'Kullanıcı başarıyla silindi.' },
+  deleteUserError: { message: 'Silme Başarısız', description: 'Kullanıcı silinirken bir hata oluştu. Lütfen tekrar deneyin.' },
+  updateUserRolesSuccess: { message: 'Roller Güncellendi', description: 'Kullanıcı rolleri başarıyla güncellendi.' },
+  updateUserRolesError: { message: 'Roller Güncellenemedi', description: 'Roller güncellenirken bir hata oluştu. Lütfen tekrar deneyin.' },
+} as const
+
 export const validationMessages = {
   firstName: { required: 'Ad alanı zorunludur' },
   lastName: { required: 'Soyad alanı zorunludur' },

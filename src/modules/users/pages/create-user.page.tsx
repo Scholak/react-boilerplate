@@ -5,10 +5,9 @@ import { Button, notification, Space, Typography } from 'antd'
 import { queryClient } from '@/core/lib/query-client'
 
 import CreateUserForm from '@/modules/users/components/create-user-form'
-import { queryKeys } from '@/modules/users/users.constants'
+import { queryKeys, usersNotifications } from '@/modules/users/users.constants'
 import { useCreateUser } from '@/modules/users/users.hooks'
 import type { TCreateUserSchema } from '@/modules/users/users.schemas'
-import type { TUser } from '@/modules/users/users.types'
 
 const { Title, Text } = Typography
 
@@ -16,20 +15,13 @@ const CreateUserPage = () => {
   const navigate = useNavigate()
 
   const mutation = useCreateUser({
-    onSuccess: async (user: TUser) => {
+    onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.list })
-      notification.success({
-        message: 'Kullanıcı oluşturuldu',
-        description: `${user.firstName} ${user.lastName} kullanıcısı başarıyla oluşturuldu.`,
-      })
+      notification.success(usersNotifications.createUserSuccess)
       await navigate({ to: '/users' })
     },
     onError: () => {
-      notification.error({
-        message: 'Oluşturma başarısız',
-        description:
-          'Kullanıcı oluşturulurken bir hata oluştu. E-posta adresi zaten kullanımda olabilir.',
-      })
+      notification.error(usersNotifications.createUserError)
     },
   })
 

@@ -1,6 +1,7 @@
 import { useNavigate } from '@tanstack/react-router'
 import { notification } from 'antd'
 
+import { authNotifications } from '@/modules/auth/auth.constants'
 import { useResetPassword } from '@/modules/auth/auth.hooks'
 import { resetPasswordRoute } from '@/modules/auth/auth.routes'
 import type { TResetPasswordSchema } from '@/modules/auth/auth.schemas'
@@ -12,17 +13,11 @@ const ResetPasswordPage = () => {
 
   const mutation = useResetPassword({
     onSuccess: async () => {
-      notification.success({
-        message: 'Şifre güncellendi',
-        description: 'Şifreniz başarıyla sıfırlandı. Artık giriş yapabilirsiniz.',
-      })
+      notification.success(authNotifications.resetPasswordSuccess)
       await navigate({ to: '/sign-in' })
     },
     onError: () => {
-      notification.error({
-        message: 'Geçersiz bağlantı',
-        description: 'Sıfırlama bağlantısı geçersiz veya süresi dolmuş. Lütfen yeniden talep edin.',
-      })
+      notification.error(authNotifications.resetPasswordError)
     },
   })
 

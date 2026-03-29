@@ -4,7 +4,7 @@ import { Avatar, Card, notification, Typography } from 'antd'
 import { queryClient } from '@/core/lib/query-client'
 import { getInitials } from '@/core/utils/get-initials'
 
-import { queryKeys } from '@/modules/auth/auth.constants'
+import { authNotifications, queryKeys } from '@/modules/auth/auth.constants'
 import { useUpdateProfile, useChangePassword, useAuth } from '@/modules/auth/auth.hooks'
 import type { TUpdateProfileSchema, TChangePasswordSchema } from '@/modules/auth/auth.schemas'
 import ChangePasswordForm from '@/modules/auth/components/change-password-form'
@@ -19,31 +19,19 @@ const ProfilePage = () => {
   const updateProfile = useUpdateProfile({
     onSuccess: (data) => {
       queryClient.setQueryData(queryKeys.auth, data)
-      notification.success({
-        message: 'Profil güncellendi',
-        description: `${data.firstName} ${data.lastName}, profil bilgileriniz başarıyla kaydedildi.`,
-      })
+      notification.success(authNotifications.updateProfileSuccess)
     },
     onError: () => {
-      notification.error({
-        message: 'Güncelleme başarısız',
-        description: 'Profil güncellenirken bir hata oluştu. Lütfen tekrar deneyin.',
-      })
+      notification.error(authNotifications.updateProfileError)
     },
   })
 
   const changePassword = useChangePassword({
     onSuccess: () => {
-      notification.success({
-        message: 'Şifre değiştirildi',
-        description: 'Şifreniz başarıyla güncellendi.',
-      })
+      notification.success(authNotifications.changePasswordSuccess)
     },
     onError: () => {
-      notification.error({
-        message: 'Şifre değiştirilemedi',
-        description: 'Mevcut şifreniz hatalı. Lütfen kontrol ederek tekrar deneyin.',
-      })
+      notification.error(authNotifications.changePasswordError)
     },
   })
 

@@ -5,7 +5,7 @@ import { Button, notification, Space, Typography } from 'antd'
 import { queryClient } from '@/core/lib/query-client'
 
 import EditUserForm from '@/modules/users/components/edit-user-form'
-import { queryKeys } from '@/modules/users/users.constants'
+import { queryKeys, usersNotifications } from '@/modules/users/users.constants'
 import { useUserForEdit, useUpdateUser } from '@/modules/users/users.hooks'
 import type { TUpdateUserSchema } from '@/modules/users/users.schemas'
 import type { TUser } from '@/modules/users/users.types'
@@ -22,18 +22,11 @@ const EditUserPage = () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.list })
       queryClient.invalidateQueries({ queryKey: queryKeys.edit(userId) })
       queryClient.setQueryData(queryKeys.detail(userId), updated)
-      notification.success({
-        message: 'Kullanıcı güncellendi',
-        description: `${updated.firstName} ${updated.lastName} kullanıcısı başarıyla güncellendi.`,
-      })
+      notification.success(usersNotifications.updateUserSuccess)
       await navigate({ to: '/users' })
     },
     onError: () => {
-      notification.error({
-        message: 'Güncelleme başarısız',
-        description:
-          'Kullanıcı güncellenirken bir hata oluştu. E-posta adresi zaten kullanımda olabilir.',
-      })
+      notification.error(usersNotifications.updateUserError)
     },
   })
 

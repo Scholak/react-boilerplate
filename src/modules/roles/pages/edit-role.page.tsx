@@ -5,7 +5,7 @@ import { Button, notification, Space, Typography } from 'antd'
 import { queryClient } from '@/core/lib/query-client'
 
 import RoleForm from '@/modules/roles/components/role-form'
-import { queryKeys } from '@/modules/roles/roles.constants'
+import { queryKeys, rolesNotifications } from '@/modules/roles/roles.constants'
 import { useRoleForEdit, useUpdateRole } from '@/modules/roles/roles.hooks'
 import type { TRole } from '@/modules/roles/roles.types'
 
@@ -21,17 +21,11 @@ const EditRolePage = () => {
     onSuccess: async (updated: TRole) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.list })
       queryClient.setQueryData(queryKeys.detail(roleId), updated)
-      notification.success({
-        message: 'Rol güncellendi',
-        description: `${updated.name} rolü başarıyla güncellendi.`,
-      })
+      notification.success(rolesNotifications.updateRoleSuccess)
       await navigate({ to: '/roles' })
     },
     onError: () => {
-      notification.error({
-        message: 'Güncelleme başarısız',
-        description: 'Rol güncellenirken bir hata oluştu. Rol adı zaten kullanımda olabilir.',
-      })
+      notification.error(rolesNotifications.updateRoleError)
     },
   })
 

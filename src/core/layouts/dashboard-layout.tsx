@@ -17,6 +17,7 @@ import { queryClient } from '@/core/lib/query-client'
 import { PERMISSIONS } from '@/core/lib/permissions'
 import { getInitials } from '@/core/utils/get-initials'
 
+import { authNotifications } from '@/modules/auth/auth.constants'
 import { useAuth, useSignOut } from '@/modules/auth/auth.hooks'
 
 const { Sider, Header, Content } = Layout
@@ -30,10 +31,9 @@ const DashboardLayout = () => {
       await navigate({ to: '/sign-in', search: { isSignedOut: true } })
     },
     onError: () => {
-      notification.error({
-        message: 'Çıkış başarısız',
-        description: 'Çıkış yapılırken bir hata oluştu. Lütfen tekrar deneyin.',
-      })
+      notification.error(
+         authNotifications.signOutError
+      )
     },
   })
   const location = useLocation()
